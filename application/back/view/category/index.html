@@ -1,0 +1,97 @@
+{extend name="common/layout" /}
+
+{block name="content"}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <a href="{:url('set')}" data-toggle="tooltip" title="新增" class="btn btn-primary"> <i class="fa fa-plus"></i>
+                </a>
+                <button type="button" data-toggle="tooltip" title="删除" class="btn btn-danger" onclick="confirm('确认？') ? $('#form-index').submit() : false;">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
+            <h1>分类管理</h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="{:url('site/index')}">首页</a>
+                </li>
+                <li>
+                    <a href="{:url('index')}">分类管理</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-list"></i>
+                    分类列表
+                </h3>
+            </div>
+            <div class="panel-body">
+
+                <form action="{:url('multi')}" method="post" id="form-index">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td style="width: 1px;" class="text-center">
+                                    <input type="checkbox" onclick="$('input[name=\'selected[]\']').prop('checked', this.checked);" />
+                                </td>
+                                <td class="text-center">
+                                    分类
+                                </td>
+                                <td class="text-center">
+                                    上级分类
+                                </td>
+                                <td class="text-center">
+                                    排序
+                                </td>
+                                <td class="text-center">
+                                    启用
+                                </td>
+
+                                <td class="text-right">管理</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {if condition="count($rows) > 0"}
+                            {foreach $rows as $row}
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" name="selected[]" value="{$row['id']}" {if condition="$row['parent_id'] eq 0"}disabled{else/}{/if}/>
+                                </td>
+                                <td class="text-left">
+                                    {:str_repeat('&nbsp;', $row['level']*4)}
+                                    {$row['title']}
+                                </td>
+                                <td class="text-left">{$row['parent_id']}</td>
+                                <td class="text-left">{$row['sort']}</td>
+                                <td class="text-left">{$row['is_used']}</td>
+
+                                <td class="text-right">
+                                    <a href="{:url('set', ['id'=>$row['id']])}" data-toggle="tooltip" title="编辑" class="btn btn-primary">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {/foreach}
+                            {else/}
+                            <tr>
+                                <td class="text-center" colspan="6">
+                                    无记录
+                                </td>
+                            </tr>
+                            {/if}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

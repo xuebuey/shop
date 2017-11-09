@@ -1,0 +1,135 @@
+{extend name="common/layout" /}
+
+{block name="content"}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <a href="{:url('set')}" data-toggle="tooltip" title="新增" class="btn btn-primary"> <i class="fa fa-plus"></i>
+                </a>
+                <button type="button" data-toggle="tooltip" title="删除" class="btn btn-danger" onclick="confirm('确认？') ? $('#form-index').submit() : false;">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
+            <h1>动作管理</h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="{:url('site/index')}">首页</a>
+                </li>
+                <li>
+                    <a href="{:url('index')}">动作管理</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-list"></i>
+                    动作列表
+                </h3>
+            </div>
+            <div class="panel-body">
+                <form action="{:url('index')}" method="get">
+                    <div class="well">
+                        <div class="row">
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_title">权限</label>
+                                    <input type="text" name="filter_title" value="{$filter['filter_title']|default=''}" placeholder="权限" id="input-filter_title" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_rule">规则</label>
+                                    <input type="text" name="filter_rule" value="{$filter['filter_rule']|default=''}" placeholder="规则" id="input-filter_rule" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_description">描述</label>
+                                    <input type="text" name="filter_description" value="{$filter['filter_description']|default=''}" placeholder="描述" id="input-filter_description" class="form-control" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <button type="submit" id="button-filter" class="btn btn-primary pull-right">
+                                    <i class="fa fa-search"></i>
+                                    筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <form action="{:url('multi')}" method="post" id="form-index">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td style="width: 1px;" class="text-center">
+                                    <input type="checkbox" onclick="$('input[name=\'selected[]\']').prop('checked', this.checked);" />
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'title')}" class="{:classOrder($order, 'title')}">权限</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'rule')}" class="{:classOrder($order, 'rule')}">规则</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'description')}" class="{:classOrder($order, 'description')}">描述</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'sort')}" class="{:classOrder($order, 'sort')}">排序</a>
+                                </td>
+
+                                <td class="text-right">管理</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {if condition="$paginator->total() > 0"}
+                            {foreach $paginator as $row}
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" name="selected[]" value="{$row['id']}" />
+                                </td>
+                                <td class="text-left">{$row['title']}</td>
+                                <td class="text-left">{$row['rule']}</td>
+                                <td class="text-left">{$row['description']}</td>
+                                <td class="text-left">{$row['sort']}</td>
+
+                                <td class="text-right">
+                                    <a href="{:url('set', ['id'=>$row['id']])}" data-toggle="tooltip" title="编辑" class="btn btn-primary">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {/foreach}
+                            {else/}
+                            <tr>
+                                <td class="text-center" colspan="6">
+                                    无记录
+                                </td>
+                            </tr>
+                            {/if}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-sm-6 text-left">
+                        {$paginator->render()}
+                    </div>
+                    <div class="col-sm-6 text-right">显示开始 {$start} 到 {$end} 之 {$paginator->total()} （总 {$paginator->lastPage()} 页）</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
